@@ -5,7 +5,7 @@ License
 
 [GNU General Public License version 3](http://www.gnu.org/licenses/gpl.txt)
 
-Copyright (c) 2013-2015 Marcel Bokhorst ([M66B](http://forum.xda-developers.com/member.php?u=2799345))
+Copyright (c) 2017 WAXprivacy
 
 All rights reserved
 
@@ -22,4 +22,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with XPrivacy.  If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/).
+along with WAXprivacy.  If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/).
