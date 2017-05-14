@@ -15,6 +15,19 @@ Whatsapp fragt immer das Adressebuch ab.<br>
 2. dann einzelen über raw_contacts
 3. vom Kontackt die einzelen eigeben Datensätze
 
+Build & test
+------------
+Build Android Studio
+- de.robv.android.xposed:api:82 (https://github.com/rovo89/XposedBridge)
+
+Test Geräte
+Genymotion (Android 5.1.0)
+und Samsung Galaxy S6 Edge (Android 5.1.1)
+
+Beide mit Xposed Version 87
+
+
+
 License
 -------
 
