@@ -100,6 +100,7 @@ public class main implements IXposedHookLoadPackage {
                             while (cursor.moveToNext()) {
                                 // ob es FIELD "_id" gibt
                                 if (cursor.getColumnIndex("_id") > -1) {
+
                                     //TODO 1. function true oder false
                                     if (cursor.getString(cursor.getColumnIndex("_id")).equals("2"))
                                         copy = true;

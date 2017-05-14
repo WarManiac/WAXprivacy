@@ -7,10 +7,16 @@ android {
         applicationId "cx.ath.laghaim.waxprivacy"
         minSdkVersion 22
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 0
+        versionName "0.0.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    productFlavors {
+        full {
+            versionName "0.0.01-pre-Alpha"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
