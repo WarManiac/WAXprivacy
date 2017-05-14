@@ -2,7 +2,7 @@
 
 Idee
 ----
-Von Xprivacy im Zusammenhang von Sperren von bestimmen Kontakten in allen Apps.
+Von Xprivacy im Zusammenhang von Sperren von bestimmen Kontakten in allen Apps.<br>
 Leider läuft Xprivacy nicht zusammen mit LBE.
 So mit muste was eingenständiges her.
 Da mit war WAXprivacy geboren.
