@@ -27,7 +27,6 @@ Samsung Galaxy S6 Edge (Android 5.1.1)<br>
 
 Beide mit Xposed Version 87
 
-<br><br>
 License
 -------
 
