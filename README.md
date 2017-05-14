@@ -12,7 +12,7 @@ Funktion
 Whatsapp fragt immer das Adressebuch ab.<br>
 über immer alle: <br>
 1. raw_contacts ab
-2. dann einzelen
+2. dann einzelen über raw_contacts
 3. vom Kontackt die einzelen eigeben Datensätze
 
 License
