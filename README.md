@@ -17,10 +17,10 @@ Whatsapp fragt immer das Adressebuch ab.<br>
 
 Build & test
 ------------
-Build Android Studio
+Build Android Studio<br>
 - de.robv.android.xposed:api:82 (https://github.com/rovo89/XposedBridge)
 
-Test Geräte
+Test Geräte<br>
 Genymotion (Android 5.1.0)<br>
 und<br>
 Samsung Galaxy S6 Edge (Android 5.1.1)<br>
