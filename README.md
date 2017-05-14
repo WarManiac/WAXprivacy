@@ -3,14 +3,14 @@
 Idee
 ----
 Von Xprivacy im Zusammenhang von Sperren von bestimmen Kontakten in allen Apps.<br>
-Leider läuft Xprivacy nicht zusammen mit LBE.
-So mit muste was eingenständiges her.
+Leider läuft Xprivacy nicht zusammen mit LBE.<br>
+So mit muste was eingenständiges her.<br>
 Da mit war WAXprivacy geboren.
 
 Funktion
 --------
-Whatsapp fragt immer das Adressebuch ab.
-über immer alle 
+Whatsapp fragt immer das Adressebuch ab.<br>
+über immer alle: <br>
 1. raw_contacts ab
 2. dann einzelen
 3. vom Kontackt die einzelen eigeben Datensätze
