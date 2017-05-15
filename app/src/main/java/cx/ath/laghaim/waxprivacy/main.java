@@ -6,19 +6,22 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+
+
+import android.app.Application;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
-public class main implements IXposedHookLoadPackage {
 
+public class main extends Application implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
         if (!lpparam.packageName.equals("com.whatsapp"))
             return;
 
-        //XposedBridge.log("Loaded app: " + lpparam.packageName);
+
 
         try {
             final Class<?> cResolver = findClass("android.content.ContentResolver", lpparam.classLoader);
@@ -43,7 +46,6 @@ public class main implements IXposedHookLoadPackage {
                     }
 
                     // was WA alles ab Fragt im zusammenhang android.content.ContentResolver
-
                     XposedBridge.log("beforeHookedMethod:");
                     XposedBridge.log("  >Hooked    uri: " + uri);
                     XposedBridge.log("  >param.args[0]='' ");
@@ -65,7 +67,9 @@ public class main implements IXposedHookLoadPackage {
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     boolean copy = false;
 
-                    //TODO: 1. _id/raw_contact_id speichern suchen ausgeben lassen bei erlaubt
+
+
+                    //TODO: 1. _id/raw_contact_id speichern suchen ausgeben lassen bei erlaubt SQLite
                     //TODO: 2. Datensätze bereinigen (nur Nummer und Name ggf. Profilbild)
 
                     Uri uri = (Uri) param.args[0];
@@ -102,17 +106,25 @@ public class main implements IXposedHookLoadPackage {
                                 if (cursor.getColumnIndex("_id") > -1) {
 
                                     //TODO 1. function true oder false
-                                    if (cursor.getString(cursor.getColumnIndex("_id")).equals("2"))
+
+                                    /*
+                                    // hole _id als INT
+                                    int ID=cursor.getInt(cursor.getColumnIndex("_id"));
+                                    XposedBridge.log(" >>>DB>>>"+ID);
+
+                                    if (cursor.getString(cursor.getColumnIndex("_id")).equals("1"))
                                         copy = true;
                                     else copy = false;
 
                                     // for ... für XposedBridge.log >> debug
                                     for (int i = 0; i < cNames.length; i++) {
-                                        XposedBridge.log(" >>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
+                                        XposedBridge.log(" raw_contacts>>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
                                     }
 
                                     // wenn gestattet Kopier daten satz
-                                    if (copy) copyColumns(cursor, result);
+                                    if (copy)
+                                        */
+                                        copyColumns(cursor, result);
                                 }
                             }
                         }
@@ -131,12 +143,20 @@ public class main implements IXposedHookLoadPackage {
                                 // ob es FIELD "raw_contact_id" gibt
                                 if (cursor.getColumnIndex("raw_contact_id") > -1) {
                                     //TODO 1. 2. function true oder false
-                                    if (cursor.getString(cursor.getColumnIndex("raw_contact_id")).equals("2"))
+                                    if (
+                                            cursor.getString(cursor.getColumnIndex("data2")).equals("0") &&
+                                            cursor.getString(cursor.getColumnIndex("data3")).equals("WA")
+                                       ) {
                                         copy = true;
-                                    else copy = false;
-                                    for (int i = 0; i < cNames.length; i++) {
-                                        XposedBridge.log(" >>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
+                                        for (int i = 0; i < cNames.length; i++) {
+                                            XposedBridge.log(" phones>>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
+                                        }
                                     }
+                                    else {
+                                        copy = false;
+                                    }
+
+
                                     if (copy) copyColumns(cursor, result);
                                 }
                             }
@@ -157,13 +177,16 @@ public class main implements IXposedHookLoadPackage {
                                 // ob es FIELD "raw_contact_id" gibt
                                 if (cursor.getColumnIndex("raw_contact_id") > -1) {
                                     //TODO 1. 2. function true oder false
-                                    if (cursor.getString(cursor.getColumnIndex("raw_contact_id")).equals("2"))
+
+                                    /*
+                                    if (cursor.getString(cursor.getColumnIndex("raw_contact_id")).equals("1"))
                                         copy = true;
                                     else copy = false;
                                     for (int i = 0; i < cNames.length; i++) {
-                                        XposedBridge.log(" >>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
+                                        XposedBridge.log(" data>>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
                                     }
-                                    if (copy) copyColumns(cursor, result);
+                                    if (copy) */
+                                        copyColumns(cursor, result);
                                 }
                             }
                         }
@@ -217,4 +240,6 @@ public class main implements IXposedHookLoadPackage {
             Log.e("ttt", "", ex);
         }
     }
+
+
 }
