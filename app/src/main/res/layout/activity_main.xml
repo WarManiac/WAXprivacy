@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cx.ath.laghaim.waxprivacy.MainActivity">
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:id="@+id/xmain"
+         android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/TNAME"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:inputType="textPersonName"
+              android:text="Name"
+              android:textSize="30sp"
+              tools:ignore="TextViewEdits" />
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+               <TextView
+                   android:id="@+id/TPHONE"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_marginStart="16dp"
+                   android:layout_weight="1"
+                   android:text="TextView"
+                   android:textSize="18sp" />
+
+               <Switch
+                   android:id="@+id/Tswitch"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_marginEnd="16dp"
+                   android:layout_weight="1" />
+
+          </LinearLayout>
+     </LinearLayout>
+</ScrollView>

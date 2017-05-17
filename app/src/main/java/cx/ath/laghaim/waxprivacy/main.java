@@ -3,21 +3,40 @@ package cx.ath.laghaim.waxprivacy;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
-
-import android.app.Application;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+
 import android.util.Log;
+import android.widget.ListView;
 
 
-public class main extends Application implements IXposedHookLoadPackage {
+public class main implements IXposedHookZygoteInit, IXposedHookLoadPackage {
+
+    public static XSharedPreferences sharedPrefs;
+    private ListView mListView;
+
+    public void loadPrefs() {
+        sharedPrefs = new XSharedPreferences("cx.ath.laghaim.waxprivacy", "expSettings");
+        sharedPrefs.makeWorldReadable();
+        sharedPrefs.getFile().setWritable(true,false);
+    }
+
+    @Override
+    public void initZygote(IXposedHookZygoteInit.StartupParam startupParam) throws Throwable {
+        loadPrefs();
+    }
+
     @Override
     public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
+
+
         if (!lpparam.packageName.equals("com.whatsapp"))
             return;
 
@@ -30,6 +49,7 @@ public class main extends Application implements IXposedHookLoadPackage {
 
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    sharedPrefs.reload();
 
                     Uri uri = (Uri) param.args[0];
                     // benötig für WA
@@ -46,21 +66,17 @@ public class main extends Application implements IXposedHookLoadPackage {
                     }
 
                     // was WA alles ab Fragt im zusammenhang android.content.ContentResolver
-                    XposedBridge.log("beforeHookedMethod:");
-                    XposedBridge.log("  >Hooked    uri: " + uri);
-                    XposedBridge.log("  >param.args[0]='' ");
+                    //XposedBridge.log("beforeHookedMethod:");
+                    //XposedBridge.log("  >Hooked    uri: " + uri);
+                    //XposedBridge.log("  >param.args[0]='' ");
+                    //param.args[0]="";
                 }
 
                 private void debug(MethodHookParam param) {
                     String[] cNames = ((Cursor) param.getResult()).getColumnNames();
                     for (int i = 0; i < cNames.length; i++) {
-                        XposedBridge.log(" >>Field[" + i + "] = " + cNames[i]);
+                        //XposedBridge.log(" >>Field[" + i + "] = " + cNames[i]);
                     }
-                }
-
-                //TODO: 1. _id/raw_contact_id speichern suchen ausgeben lassen bei erlaubt
-                private boolean pruefen(String arg) {
-                    return false;
                 }
 
                 @Override
@@ -73,11 +89,9 @@ public class main extends Application implements IXposedHookLoadPackage {
                     //TODO: 2. Datensätze bereinigen (nur Nummer und Name ggf. Profilbild)
 
                     Uri uri = (Uri) param.args[0];
-                    XposedBridge.log("afterHookedMethod:");
-                    XposedBridge.log("   uri=" + uri + "-->" + uri.getHost() + uri.getPath());
-
+                    //XposedBridge.log("afterHookedMethod:");
+                    //XposedBridge.log("   uri=" + uri + "-->" + uri.getHost() + uri.getPath());
                     Cursor cursor;
-
 
                     try // Probleme mit KNOX und Samsunggeräte vorbeugen
                     {
@@ -149,7 +163,7 @@ public class main extends Application implements IXposedHookLoadPackage {
                                        ) {
                                         copy = true;
                                         for (int i = 0; i < cNames.length; i++) {
-                                            XposedBridge.log(" phones>>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
+                                            //XposedBridge.log(" phones>>>" + i + ": " + cNames[i] + " = " + cursor.getString(cursor.getColumnIndex(cNames[i])));
                                         }
                                     }
                                     else {
@@ -242,4 +256,112 @@ public class main extends Application implements IXposedHookLoadPackage {
     }
 
 
+
+   }
+
+
+   /*
+   package cx.ath.laghaim.waxprivacy;
+
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+
+import android.widget.Switch;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    public DBHelper DB;
+    ArrayList<String> contactList;
+    Cursor cursor;
+    ScrollView Main;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        DB=new DBHelper(this);
+        Main=(ScrollView) findViewById(R.id.Main);
+
+        // blockiert nicht das UI "Anwendung reageiert nicht" bei sehr vielen Kontackte
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getContacts();
+            }
+        }).start();
+    }
+
+
+    public void getContacts() {
+        contactList = new ArrayList<String>();
+
+        String phoneNumber = null;
+
+        Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
+        String _ID = ContactsContract.Contacts._ID;
+        String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
+        String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
+
+        Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+        String NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
+
+
+        StringBuffer output;
+        ContentResolver contentResolver = getContentResolver();
+        cursor = contentResolver.query(CONTENT_URI, null,null, null, null);
+
+        if (cursor.getCount() > 0) {
+
+            //EditText
+            // LinearLayout
+            //   Switch
+            //   Switch
+            // TODO: 16.05.17 erstelle gui einträge!!
+            String contact_id = cursor.getString(cursor.getColumnIndex(_ID));
+            String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
+            int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+
+            if (hasPhoneNumber > 0) {
+                int counter=1;
+                EditText temp= new EditText(this);
+                temp.setId(Integer.parseInt(_ID)*1000);
+                temp.setText(DISPLAY_NAME);
+                Main.addView(temp);
+
+                LinearLayout Ltemp=new LinearLayout(this);
+                Ltemp.setOrientation(LinearLayout.VERTICAL);
+                Ltemp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                Ltemp.setId( (Integer.parseInt(_ID)*1000)+counter );
+                Main.addView(Ltemp);
+
+                Switch Ptemp=new Switch(this);
+
+
+                //This is to read multiple phone numbers associated with the same contact
+                Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{contact_id}, null);
+
+                while (phoneCursor.moveToNext()) {
+                    phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+                    Ptemp.setId( (Integer.parseInt(_ID)*1000)+counter );
+                    Ptemp.setText(phoneNumber);
+                    counter++;
+                    // TODO: 16.05.17 datenbanke abgleich eintragen Einstellung usw.
+                }
+                phoneCursor.close();
+                Main.addView(Ptemp);
+            }
+        }
+    }
 }
+
+    */
