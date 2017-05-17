@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -81,10 +82,30 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.delete("contacts","rowid = ? ", new String[] { String.valueOf(rowid) });
     }
 
+    public ArrayList <String> getrow(Integer id)
+    {
+        ArrayList<String> array_list =new ArrayList<String>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select rowid,* from "+CONTACTS_TABLE_NAME+" where rowid= "+id , null );
+
+        res.moveToFirst();
+        array_list.add(res.getString(res.getColumnIndex("rowid"    )));
+        array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_ID    )));
+        array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_RAW_ID)));
+        array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_NAME  )));
+        array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_PHONE )));
+        array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_STATUS)));
+
+        return  array_list;
+    }
+
+
     public ArrayList<ArrayList <String> > contact(Integer id,String name,String phone)
     {
-        ArrayList<ArrayList <String> > re=new ArrayList<ArrayList <String> >();
-        ArrayList<String> array_list = new ArrayList<String>();
+        ArrayList<ArrayList <String> > re =new ArrayList<ArrayList<String>>();
+
+
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACTS_COLUMN_ID    , id);
@@ -96,25 +117,27 @@ public class DBHelper extends SQLiteOpenHelper {
                 name,
                 phone
         };
-        Cursor res = db.query(CONTACTS_TABLE_NAME, null, whereClause, whereArgs, null, null,null);
+        Cursor res = db.query(CONTACTS_TABLE_NAME, new String[]{"rowid","*"}, whereClause, whereArgs, null, null,null);
         res.moveToFirst();
         while(res.isAfterLast() == false){
+            ArrayList<String> array_list =new ArrayList<String>();
             array_list.add(res.getString(res.getColumnIndex("rowid"    )));
             array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_ID    )));
             array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_RAW_ID)));
             array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_NAME  )));
             array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_PHONE )));
             array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_STATUS)));
-            res.moveToNext();
             re.add(array_list);
-            array_list.clear();
+            res.moveToNext();
+
         }
         return re;
     }
 
     public ArrayList<ArrayList <String> > getAllCotacts() {
-        ArrayList<ArrayList <String> > re=new ArrayList<ArrayList <String> >();
-        ArrayList<String> array_list = new ArrayList<String>();
+
+        ArrayList<ArrayList <String> > re =new ArrayList<ArrayList<String>>();
+        ArrayList<String> array_list =new ArrayList<String>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select rowid,* from "+CONTACTS_TABLE_NAME, null );

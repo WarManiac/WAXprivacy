@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import android.widget.Switch;
@@ -14,7 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     public DBHelper DB;
 
@@ -41,14 +43,8 @@ public class MainActivity extends AppCompatActivity {
         TPHONE.setVisibility(View.GONE);
         Tswitch.setVisibility(View.GONE);
 
-        // blockiert nicht das UI "Anwendung reageiert nicht" bei sehr vielen Kontackte
-        //new Thread(new Runnable() {
+        getContacts();
 
-        //    @Override
-        //    public void run() {
-                getContacts();
-        //    }
-        //}).start();
     }
 
     public void getContacts() {
@@ -89,7 +85,27 @@ public class MainActivity extends AppCompatActivity {
 
 
                     while (phoneCursor.moveToNext()) {
+
                         phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+
+                        ArrayList<ArrayList <String> > TT =  DB.contact(Integer.parseInt(contact_id),name,phoneNumber);
+
+                        if (TT.size() > 1)
+                        {
+                            DB.deleteContact(Integer.parseInt(TT.get(0).get(0)));
+                            Log.e("del",TT.get(0).get(3));
+                        }
+                        if (TT.size()==1)
+                            Log.e("123456789",TT.get(0).get(3));
+                        if (TT.size()==0)
+                        {
+                            DB.insertContact(Integer.parseInt(contact_id),Integer.parseInt(contact_id),name,phoneNumber,0);
+                            TT =  DB.contact(Integer.parseInt(contact_id),name,phoneNumber);
+                        }
+
+                        for (int i=0; i<TT.size();i++)
+                            for (int ii=0; ii<TT.get(i).size();ii++)
+                                Log.e("out", ""+ii+">>"+TT.get(i).get(ii));
 
                         LinearLayout LTemp=new LinearLayout(this);
                         LTemp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -98,16 +114,20 @@ public class MainActivity extends AppCompatActivity {
                         TextView NTemp=new TextView(this);
                         NTemp.setLayoutParams(TPHONE.getLayoutParams());
                         NTemp.setTextSize(18);
-
-                        NTemp.setText(phoneNumber);
-                        //NTemp.setId((Integer.parseInt(contact_id)*1000)+2);
+                        NTemp.setText(TT.get(0).get(4));
 
                         Switch STemp=new Switch(this);
                         STemp.setLayoutParams(Tswitch.getLayoutParams());
-                        //NTemp.setId((Integer.parseInt(contact_id)*1000));
+                        STemp.setId((Integer.parseInt(TT.get(0).get(0))*1000));
+                        if (TT.get(0).get(5).equals("1"))
+                            STemp.setChecked(true);
+
+                        STemp.setOnCheckedChangeListener(this);
+
                         LTemp.addView(NTemp);
                         LTemp.addView(STemp);
                         Main.addView(LTemp);
+
                     }
                     phoneCursor.close();
                 }
@@ -116,4 +136,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.e("Switch", ""+buttonView.getId()+" "+isChecked);
+        ArrayList <String> re= DB.getrow(buttonView.getId()/1000);
+
+        if (isChecked)
+            DB.updateContact (buttonView.getId()/1000, Integer.parseInt(re.get(1)), Integer.parseInt(re.get(1)), re.get(3), re.get(4), 1);
+        else
+            DB.updateContact (buttonView.getId()/1000, Integer.parseInt(re.get(1)), Integer.parseInt(re.get(1)), re.get(3), re.get(4), 0);
+    }
 }
