@@ -1,6 +1,5 @@
 package cx.ath.laghaim.waxprivacy;
 
-
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
