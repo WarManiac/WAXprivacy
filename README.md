@@ -15,6 +15,17 @@ Whatsapp fragt immer das Adressebuch ab.<br>
 2. dann einzelen über raw_contacts
 3. vom Kontackt die einzelen eigeben Datensätze
 
+GUI Xposed Module
+----
+Auswahle welche Kontaket Whatsapp sehen darf.
+danach manuel in whatsapp Kontakte neu einlesen
+
+TODO
+----
+Doppelt einträge entfernen datenbanke
+automatisch in whatsapp Kontakte neu einlesen
+
+
 Build & test
 ------------
 Build Android Studio<br>
