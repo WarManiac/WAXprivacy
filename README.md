@@ -44,7 +44,8 @@ Beide mit Xposed Version 87
 
 in Sachen Whatsapp
 ------------------
-Auszug https://www.whatsapp.com/legal/?l=de#terms-of-service<br>
+Auszug AGB's Ouelle:<br>
+https://www.whatsapp.com/legal/?l=de#terms-of-service<br>
 
 "Adressbuch. Du stellst uns regelmäßig die Telefonnummern von WhatsApp-Nutzern<br>
 und deinen sonstigen Kontakten in deinem Mobiltelefon-Adressbuch zur Verfügung.<br>
