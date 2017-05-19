@@ -18,6 +18,19 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
+    public static final String KIWI = MainActivity.class.getPackage().getName();
+    public static final String SETTINGS_ACTIVITY = MainActivity.class.getSimpleName();
+    public static final String ACTION_PACK_ADD = KIWI+".pack_add";
+    public static final String ACTION_PACK_REMOVE = KIWI+".pack_remove";
+    public static final String ACTION_ALL_PACK = KIWI+".all_packs";
+    public static final String ACTION_SEND_PACKS = KIWI+".send_packs";
+    public static final String PACKAGES = "packages";
+    public static final String PACKAGE = "package";
+    public static final String PREFS_PATH = "/data/"+KIWI+"/shared_prefs";
+    public static final String PREFS_NAME = "notoi.prefs";
+    public static final String STATUS = "<status>";
+
+
     public DBHelper DB;
 
     Cursor cursor;

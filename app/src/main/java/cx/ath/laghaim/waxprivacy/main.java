@@ -3,35 +3,54 @@ package cx.ath.laghaim.waxprivacy;
 
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 
 import android.util.Log;
-import android.widget.ListView;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-public class main implements IXposedHookZygoteInit, IXposedHookLoadPackage {
+public class main implements IXposedHookLoadPackage {
 
-    public static XSharedPreferences sharedPrefs;
-    private ListView mListView;
+    public static final String KIWI = main.class.getPackage().getName();
+    public static final String STATUS = "<status>";
+    //package and classes
+    public static final String SYSTEMUI = "com.android.systemui";
+    public static final String PHONE_STATUS_BAR = SYSTEMUI +".statusbar.phone.PhoneStatusBar";
+    public static final String BASE_STATUS_BAR = SYSTEMUI +".statusbar.BaseStatusBar";
+    //hooked methods
+    public static final String MAKE_STATUS_BAR_VIEW = "makeStatusBarView";
+    public static final String ADD_NOTIFICATION = "addNotification";
+    public static final String REMOVE_NOTIFICATION = "removeNotification";
+    public static final String UPDATE_NOTIFICATION = "updateNotification";
+    public static final String UPDATE_NOTIFICATION_ICONS = "updateNotificationIcons";
 
-    public void loadPrefs() {
-        sharedPrefs = new XSharedPreferences("cx.ath.laghaim.waxprivacy", "expSettings");
-        sharedPrefs.makeWorldReadable();
-        sharedPrefs.getFile().setWritable(true,false);
-    }
+    //accessed methods and fields
+    public static final String CREATE_NOTIFICATION_VIEWS = "createNotificationViews";
+    public static final String M_CONTEXT = "mContext";
+    public static final String M_NOTIFICATION_ICONS = "mNotificationIcons";
+    public static final String M_SYSTEM_ICON_AREA = "mSystemIconArea";
+    public static final String ICON = "icon";
 
-    @Override
-    public void initZygote(IXposedHookZygoteInit.StartupParam startupParam) throws Throwable {
-        loadPrefs();
-    }
+    private Set<String> i_pack = new HashSet<>();
+    private LinkedHashMap<String, View> i_icons = new LinkedHashMap<>();
+    private LinearLayout i_status;
+    private int i_sdk;
 
     @Override
     public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
@@ -49,7 +68,33 @@ public class main implements IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    sharedPrefs.reload();
+
+                    final Context ctx = (Context) XposedHelpers.getObjectField(param.thisObject, M_CONTEXT);
+                    final Object psb = param.thisObject;
+                    IntentFilter filter = new IntentFilter();
+                    filter.addAction(SimpleIntentService.ACTION_RESP);
+                    filter.addCategory(Intent.CATEGORY_DEFAULT);
+
+                    ctx.registerReceiver(new BroadcastReceiver()
+                    {
+                        @Override
+                        public void onReceive(Context context, Intent intent)
+                        {
+                            String text = intent.getStringExtra(SimpleIntentService.PARAM_OUT_MSG);
+                            XposedBridge.log("onReceive:83 > "+text);
+                        }
+                    }, filter);
+                    try
+                    {
+                        Intent i = new Intent(MainActivity.ACTION_SEND_PACKS);
+                        i.setPackage(KIWI);
+                        ctx.startService(i);
+                        XposedBridge.log(KIWI + " " + MAKE_STATUS_BAR_VIEW + " sent intent...");
+                    }
+                    catch (Throwable t)
+                    {
+                        XposedBridge.log(KIWI + " " + MAKE_STATUS_BAR_VIEW + " failed intent: " + t);
+                    }
 
                     Uri uri = (Uri) param.args[0];
                     // benötig für WA

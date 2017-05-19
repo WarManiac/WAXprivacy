@@ -51,8 +51,7 @@ public class ContactHelper {
         return cur;
     }
 
-    private static long getContactID(ContentResolver contactHelper,
-                                     String number) {
+    private static long getContactID(ContentResolver contactHelper, String number) {
         Uri contactUri = Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
 
