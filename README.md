@@ -17,13 +17,16 @@ Whatsapp fragt immer das Adressebuch ab.<br>
 
 GUI Xposed Module
 ----
-Auswahle welche Kontaket Whatsapp sehen darf.
+Auswahle welche Kontaket Whatsapp sehen darf.<br>
 danach manuel in whatsapp Kontakte neu einlesen
 
 TODO
 ----
-Doppelt einträge entfernen datenbanke
-automatisch in whatsapp Kontakte neu einlesen
+- Doppelt einträge entfernen datenbanke<br>
+- automatisch in whatsapp Kontakte neu einlesen
+- Verbesserung GUI
+- Sqlite Anbindung
+- Verbesserung der BroadcastReceiver im xposed module
 
 
 Build & test
