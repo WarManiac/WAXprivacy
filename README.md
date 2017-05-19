@@ -41,6 +41,31 @@ Samsung Galaxy S6 Edge (Android 5.1.1)<br>
 
 Beide mit Xposed Version 87
 
+
+in Sachen Whatsapp
+------------------
+Auszug https://www.whatsapp.com/legal/?l=de#terms-of-service<br>
+
+"Adressbuch. Du stellst uns regelmäßig die Telefonnummern von WhatsApp-Nutzern<br>
+und deinen sonstigen Kontakten in deinem Mobiltelefon-Adressbuch zur Verfügung.<br>
+Du bestätigst, dass du autorisiert bist, uns solche Telefonnummern zur Verfügung zu<br>
+stellen, damit wir unsere Dienste anbieten können."<br>
+
+Hatte jeder von euch die Whatsapp nuten von allen Kontaken die Autorisierung/Erlaubnis<br>
+diese Handy- oder Telephonenummer an Whatsapp weiter zugeben?
+Wenn ihr die frage mit NEIN beantworte habt ihr ein Problem!
+- Variant 1 löschen aller Kontakte wo hier keine Erlaubnis habt
+- Variant 2 ein zweites Handy mit Kontakte wo ihr die Erlaubnis habt
+
+oder WAXprivacy nutzen<br>
+Vorteil ihr habt die Kontrolle was für Nummeren an Whatsapp gehen wo ihr die Erlaubnis<br>
+von denn Kontakte habt! 
+
+Android
+-------
+Leider gibt es im Android OS keine Möglichkeit diese zumachen, einzelen Nummer oder Kontakte für<br>
+Apps zu sperren!
+
 License
 -------
 
