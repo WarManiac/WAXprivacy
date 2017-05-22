@@ -71,8 +71,8 @@ Vorteil ihr habt die Kontrolle, was für Nummeren an Whatsapp gehen, wo ihr die 
 von denn Kontakte habt! 
 
 Wemm das egal ist können, können ihr auch gerne zugriff auf euer Handy mir geben!
-Habt Nummeren Psychiater, Neurologen, Staatsfreund, -feinden, Gewerkschafen, Bordels u.s.w.<br>
-im Handy gespeichert
+Habt ihr Nummeren von Psychiater, Neurologen, Staatsfreund, -feinden, Gewerkschafen, Bordels u.s.w.<br>
+im Handy gespeichert?
 
 Android
 -------

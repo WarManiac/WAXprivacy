@@ -122,17 +122,24 @@ public class Module implements IXposedHookLoadPackage {
 
                         // debug cursed
                         String debug="";
+
                         int cNames_l_max=0;
-                        if (cursor.getCount() > 0) {
-                            for (int i = 0; i < cNames.length; i++) {
-                                if (cNames_l_max<cNames[i].length())
-                                    cNames_l_max=cNames[i].length();
-                            }
-                            for (int i = 0; i < cNames.length; i++) {
+                        if (    uri.toString().equals("content://com.android.contacts/raw_contacts")||
+                                uri.toString().equals("content://com.android.contacts/data/phones")||
+                                uri.toString().equals("content://com.android.contacts/data")
+                           )
+                        {
+                            if (cursor.getCount() > 0) {
+                                for (int i = 0; i < cNames.length; i++) {
+                                    if (cNames_l_max<cNames[i].length())
+                                        cNames_l_max=cNames[i].length();
+                                }
+                                for (int i = 0; i < cNames.length; i++) {
 
-                                String tmp="[" + cNames[i] + "]";
+                                    String tmp="[" + cNames[i] + "]";
 
-                                debug=debug+ String.format("%"+(cNames_l_max+2)+"s", tmp)     +"\t=\t" + cursor.getString(i)+"\n";
+                                    debug=debug+ String.format("%"+(cNames_l_max+2)+"s", tmp)     +"\t=\t" + cursor.getString(i)+"\n";
+                                }
                             }
                         }
 
@@ -140,6 +147,7 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/raw_contacts"))
                         {
+                            XposedBridge.log("cursor: \n"+debug);
                             if (cursor.getColumnIndex("_id")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("_id"));
                                 if (H_ROWS.indexOf(Integer.parseInt(ID) ) > -1 ) {
@@ -151,6 +159,7 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/data/phones"))
                         {
+                            XposedBridge.log("cursor: \n"+debug);
                             if (cursor.getColumnIndex("raw_contact_id")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("raw_contact_id"));
                                 PHONE=cursor.getString(cursor.getColumnIndex("data1"));
@@ -163,6 +172,7 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/data"))
                         {
+                            XposedBridge.log("cursor: \n"+debug);
                             if (cursor.getColumnIndex("data1")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("data1"));
                                 if (H_DATA1.indexOf(ID) > -1) {
@@ -191,7 +201,7 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/data?account_name=WhatsApp&account_type=com.whatsapp&caller_is_syncadapter=true"))
                         {
-                            XposedBridge.log("cursor: \n"+debug);
+                            //XposedBridge.log("cursor: \n"+debug);
                             anderung=true;
                         }
                     }

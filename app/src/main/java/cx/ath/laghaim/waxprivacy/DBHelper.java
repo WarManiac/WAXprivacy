@@ -86,13 +86,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "STATUS  integer" +
                 ");";
         db.execSQL(TABEL);
-        TABEL="CREATE TABLE IF not exists H_ROWS ( H_ROWS INTEGER NOT NULL UNIQUE);";
-        db.execSQL(TABEL);
-        TABEL="CREATE TABLE IF not exists H_DATA1 ( H_DATA1 text NOT NULL UNIQUE);";
-        db.execSQL(TABEL);
-        TABEL="CREATE TABLE IF not exists H_PHONE ( H_PHONE text NOT NULL UNIQUE);";
-        db.execSQL(TABEL);
-
     }
 
 
