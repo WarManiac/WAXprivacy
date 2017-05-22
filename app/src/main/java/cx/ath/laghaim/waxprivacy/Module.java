@@ -38,14 +38,14 @@ public class Module implements IXposedHookLoadPackage {
 
     public void logout(String info, String output)
     {
-        //XposedBridge.log(APP_PACKET_NAME + " >  " +info+  " :   "+ output);
+        XposedBridge.log(APP_PACKET_NAME+" >  " +info+  " :   "+ output);
     }
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         if (APP.equals(lpparam.packageName)) {
             int i_sdk = Build.VERSION.SDK_INT;
-            //logout("LOAD", String.valueOf(i_sdk));
+            logout("LOAD", String.valueOf(i_sdk));
 
 
             final Class<?> cResolver = findClass("android.content.ContentResolver", lpparam.classLoader);
@@ -71,13 +71,14 @@ public class Module implements IXposedHookLoadPackage {
                                 H_ROWS  = intent.getIntegerArrayListExtra(SettingsActivity.PACKAGE_H_ROWS);
                                 H_PHONE = intent.getStringArrayListExtra(SettingsActivity.PACKAGE_H_PHONE);
                                 H_DATA1 = intent.getStringArrayListExtra(SettingsActivity.PACKAGE_H_DATA1);
+
+                                //for (int i=0; i<H_ROWS.size(); i++)
+                                //    logout("replay:", "ROWID "+ String.valueOf(H_ROWS.get(i)));
                                 /*
-                                for (int i=0; i<H_ROWS.size(); i++)
-                                    XposedBridge.log("replay:"+H_ROWS.get(i));
                                 for (int i=0; i<H_PHONE.size(); i++)
-                                    XposedBridge.log("replay:"+H_PHONE.get(i));
+                                    logout("replay:",H_PHONE.get(i));
                                 for (int i=0; i<H_DATA1.size(); i++)
-                                    XposedBridge.log("replay:"+H_DATA1.get(i));
+                                    logout("replay:",H_DATA1.get(i));
                                 */
                             }
                         }
@@ -131,17 +132,20 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/raw_contacts"))
                         {
+                            logout("cursor: ", debug);
                             if (cursor.getColumnIndex("_id")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("_id"));
                                 if (H_ROWS.indexOf(Integer.parseInt(ID) ) > -1 ) {
+                                }
                                     copyColumns(cursor, result);
                                     anderung=true;
-                                }
+
                             }
                         }
 
                         if (uri.toString().equals("content://com.android.contacts/data/phones"))
                         {
+                            logout("cursor: ", debug);
                             if (cursor.getColumnIndex("raw_contact_id")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("raw_contact_id"));
                                 PHONE=cursor.getString(cursor.getColumnIndex("data1"));

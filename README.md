@@ -35,9 +35,9 @@ Build Android Studio<br>
 - de.robv.android.xposed:api:82 (https://github.com/rovo89/XposedBridge)
 
 Test Geräte:<br>
-Genymotion (Android 5.1.0)<br>
+Genymotion (Android 5.1.0) WORK<br>
 und<br>
-Samsung Galaxy S6 Edge (Android 5.1.1)<br>
+Samsung Galaxy S6 Edge (Android 5.1.1) NOT Work<br>
 
 Beide mit Xposed Version 87
 
