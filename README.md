@@ -37,7 +37,7 @@ Build Android Studio<br>
 Test Geräte:<br>
 Genymotion (Android 5.1.0) WORK<br>
 und<br>
-Samsung Galaxy S6 Edge (Android 5.1.1) NOT Work<br>
+Samsung Galaxy S6 Edge (Android 5.1.1) Work mit bugs<br>
 
 Beide mit Xposed Version 87
 

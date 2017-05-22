@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -81,6 +80,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
     public void getContacts() {
         Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
         String _ID = ContactsContract.Contacts._ID;
+        String RID = ContactsContract.Contacts.NAME_RAW_CONTACT_ID;
         String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
         String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
         Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
@@ -89,9 +89,12 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
 
+        DBHelper DB = new DBHelper(this);
+
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                Integer contact_id = cursor.getInt(cursor.getColumnIndex(_ID));
+                Integer contact_id     = cursor.getInt(cursor.getColumnIndex(_ID));
+                Integer RAW_CONTACT_ID = cursor.getInt(cursor.getColumnIndex(RID));
                 String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
                 int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
                 if (hasPhoneNumber > 0) {
@@ -100,13 +103,13 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
                     while (phoneCursor.moveToNext()) {
                         String pNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
-                        cx.ath.laghaim.waxprivacy.DBHelper DB = new cx.ath.laghaim.waxprivacy.DBHelper(this);
-                        DB.todb(contact_id, name, pNumber);
-                        DB.close();
+                        DB.todb(RAW_CONTACT_ID, name, pNumber);
+                        Log.w("Xposed","waxprivacy>getContacts()>>"+RAW_CONTACT_ID+" "+ contact_id+" " +name+ " "+ pNumber);
                     }
                 }
             }
         }
+        DB.close();
         Intent signalIntent = new Intent(cx.ath.laghaim.waxprivacy.BroadcastService.BROADCAST_ACTION);
         sendBroadcast(signalIntent);
     }
