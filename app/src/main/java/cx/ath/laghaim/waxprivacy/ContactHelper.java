@@ -1,4 +1,4 @@
-package cx.ath.laghaim.waxprivacy_intern;
+package cx.ath.laghaim.waxprivacy;
 
 /**
  * Created by dante on 21.05.17.
