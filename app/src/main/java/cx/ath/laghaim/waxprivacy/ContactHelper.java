@@ -4,7 +4,6 @@ package cx.ath.laghaim.waxprivacy_intern;
  * Created by dante on 21.05.17.
  */
 
-
 import java.util.ArrayList;
 
 import android.content.ContentProviderOperation;

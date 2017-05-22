@@ -75,6 +75,11 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
         DB.update_to();
         DB.close();
+
+        Intent i = new Intent(SettingsActivity.ACTION_SEND_CALL);
+        i.setPackage(APP_PACKET_NAME);
+        i.putExtra(SettingsActivity.PACKAGE_ID, "all");
+        startService(i);
     }
 
     public void getContacts() {

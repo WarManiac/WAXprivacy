@@ -1,12 +1,9 @@
 package cx.ath.laghaim.waxprivacy;
 
-import java.util.Date;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 
 /**
  * Created by dante on 21.05.17.
