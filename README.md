@@ -23,6 +23,7 @@ danach manuel in whatsapp Kontakte neu einlesen
 TODO
 ----
 - Doppelt einträge entfernen datenbanke
+- alte Kontakte entfernen
 - automatisch in whatsapp Kontakte neu einlesen lass in Whatsapp
 - Verbesserung GUI
 - Sqlite Anbindung "Fertig"
