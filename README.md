@@ -22,10 +22,10 @@ danach manuel in whatsapp Kontakte neu einlesen
 
 TODO
 ----
-- Doppelt einträge entfernen datenbanke<br>
-- automatisch in whatsapp Kontakte neu einlesen
+- Doppelt einträge entfernen datenbanke
+- automatisch in whatsapp Kontakte neu einlesen lass in Whatsapp
 - Verbesserung GUI
-- Sqlite Anbindung
+- Sqlite Anbindung "Fertig"
 - Verbesserung der BroadcastReceiver im xposed module
 
 
