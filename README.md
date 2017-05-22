@@ -53,7 +53,7 @@ und deinen sonstigen Kontakten in deinem Mobiltelefon-Adressbuch zur Verfügung.
 Du bestätigst, dass du autorisiert bist, uns solche Telefonnummern zur Verfügung zu<br>
 stellen, damit wir unsere Dienste anbieten können."<br>
 
-Hatte jeder von euch die Whatsapp nuten von allen Kontaken die Autorisierung/Erlaubnis<br>
+Hatte jeder von euch Whatsapp nuzten, habt ihr von ALLEN Kontaken die Autorisierung/Erlaubnis<br>
 diese Handy- oder Telephonenummer an Whatsapp weiter zugeben?
 Wenn ihr die frage mit NEIN beantworte habt ihr ein Problem!
 - Variant 1 löschen aller Kontakte wo hier keine Erlaubnis habt
