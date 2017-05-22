@@ -8,12 +8,12 @@ android {
         minSdkVersion 22
         targetSdkVersion 25
         versionCode 0
-        versionName "0.0.01"
+        versionName "0.0.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     productFlavors {
         full {
-            versionName "0.0.01-pre-Alpha"
+            versionName "0.0.02-pre-Alpha"
         }
     }
 

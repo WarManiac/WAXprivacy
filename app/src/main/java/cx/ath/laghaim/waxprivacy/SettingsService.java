@@ -2,20 +2,14 @@ package cx.ath.laghaim.waxprivacy;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Environment;
-import android.util.Log;
 
-import org.json.JSONObject;
+import java.util.ArrayList;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.Iterator;
+/**
+ * Created by dante on 20.05.17.
+ */
 
-import static cx.ath.laghaim.waxprivacy.SettingsActivity.KIWI;
-import static cx.ath.laghaim.waxprivacy.SettingsActivity.SETTINGS_ACTIVITY;
-
-public class SettingsService extends IntentService
-{
+public class SettingsService extends IntentService {
     public static final String SETTINGS_SERVICE = "SettingsService";
 
     public SettingsService()
@@ -25,43 +19,40 @@ public class SettingsService extends IntentService
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            Log.v("Xposed >>> ", intent.getAction());
 
-            String s = intent.getStringExtra(SettingsActivity.PACKAGE);
-            String tmp=readPrefs();
-            Intent i = new Intent(SettingsActivity.ACTION_PACK_ADD);
-            i.putExtra(SettingsActivity.PACKAGE, tmp);
-            sendBroadcast(i);
-        }
-    }
-
-    public static String readPrefs()
-    {
-        String tmp="";
-        File dir = new File(Environment.getDataDirectory() + SettingsActivity.PREFS_PATH);
-        File fi = new File(dir,SettingsActivity.PREFS_NAME);
-        if (fi.exists())
+        if (intent.getAction().equals(cx.ath.laghaim.waxprivacy.SettingsActivity.ACTION_SEND_CALL))
         {
-            try
+            String _ID       = intent.getStringExtra(cx.ath.laghaim.waxprivacy.SettingsActivity.PACKAGE_ID);
+
+            if (_ID.equals("all"))
             {
-                FileReader fr = new FileReader(fi);
-                StringBuilder sb = new StringBuilder();
-                char[] buffer = new char[1024];
-                int r = fr.read(buffer);
-                while (r > 0)
+                ArrayList<Integer> H_ROWS  =new ArrayList<>()  ;
+                ArrayList<String>  H_PHONE =new ArrayList<>()  ;
+                ArrayList<String>  H_DATA1 =new ArrayList<>()  ;
+
+                cx.ath.laghaim.waxprivacy.DBHelper DB=new cx.ath.laghaim.waxprivacy.DBHelper(this);
+                ArrayList<ArrayList <String> > re= DB.getAllCotacts_s();
+                DB.close();
+                for (int i=0; i<re.size(); i++)
                 {
-                    sb.append(buffer, 0, r);
-                    r = fr.read(buffer);
+                    if (H_ROWS.indexOf(Integer.parseInt(re.get(i).get(1).toString()))==-1)
+                        H_ROWS.add(Integer.parseInt(re.get(i).get(1).toString()));
+                    if (H_PHONE.indexOf(re.get(i).get(3).toString())==-1)
+                        H_PHONE.add(re.get(i).get(3).toString());
+                    if (H_DATA1.indexOf(re.get(i).get(2).toString())==-1)
+                        H_DATA1.add(re.get(i).get(2).toString());
                 }
-                fr.close();
-                tmp = sb.toString();
+                // hinzufügen und senden
+                Intent i = new Intent(cx.ath.laghaim.waxprivacy.SettingsActivity.ACTION_SEND_REPLAY);
+                i.putIntegerArrayListExtra(cx.ath.laghaim.waxprivacy.SettingsActivity.PACKAGE_H_ROWS,H_ROWS);
+                i.putStringArrayListExtra(cx.ath.laghaim.waxprivacy.SettingsActivity.PACKAGE_H_PHONE,H_PHONE);
+                i.putStringArrayListExtra(cx.ath.laghaim.waxprivacy.SettingsActivity.PACKAGE_H_DATA1,H_DATA1);
+                i.putExtra(cx.ath.laghaim.waxprivacy.SettingsActivity.PACKAGE, false);
+                sendBroadcast(i);
+
             }
-            catch (Exception e)
-            {
-                Log.e("Xposed", KIWI+" "+SETTINGS_ACTIVITY+" Exception reading prefs " + e);
-            }
+
+
         }
-        return tmp;
     }
 }
