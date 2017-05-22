@@ -7,15 +7,22 @@ Leider läuft Xprivacy nicht zusammen mit LBE.<br>
 So mit muste was eingenständiges her.<br>
 Da mit war WAXprivacy geboren.
 
-Funktion
+Funktion und Probleme
 --------
+Whatsapp App von Googelplay oder von whatsapp.com<br>
+Whatsapp mods werden nicht unterstütz<br>
+Es können probleme auftretten mit anderen Xposed module die Zusammen mit Whatsapp arbeiten<br>  
+
+Xposed Funktion module
+-----------------------
 Whatsapp fragt immer das Adressebuch ab.<br>
-über immer alle: <br>
+über: <br>
 1. raw_contacts ab
 2. dann einzelen über raw_contacts
 3. vom Kontackt die einzelen eigeben Datensätze
+genau ihr setzt WAXprivacy an, gibt oder verhinder Kontaktedaen weiter zu Whatsapp App<br>
 
-GUI Xposed Module
+GUI WAXprivacy Xposed Module
 ----
 Auswahle welche Kontaket Whatsapp sehen darf.<br>
 danach manuel in whatsapp Kontakte neu einlesen
@@ -60,8 +67,12 @@ Wenn ihr die frage mit NEIN beantworte habt ihr ein Problem!
 - Variant 2 ein zweites Handy mit Kontakte wo ihr die Erlaubnis habt
 
 oder WAXprivacy nutzen<br>
-Vorteil ihr habt die Kontrolle was für Nummeren an Whatsapp gehen wo ihr die Erlaubnis<br>
+Vorteil ihr habt die Kontrolle, was für Nummeren an Whatsapp gehen, wo ihr die Erlaubnis<br>
 von denn Kontakte habt! 
+
+Wemm das egal ist können, können ihr auch gerne zugriff auf euer Handy mir geben!
+Habt Nummeren Psychiater, Neurologen, Staatsfreund, -feinden, Gewerkschafen, Bordels u.s.w.<br>
+im Handy gespeichert
 
 Android
 -------
