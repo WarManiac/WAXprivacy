@@ -29,7 +29,7 @@ TODO
 - Verbesserung der BroadcastReceiver im xposed module
 
 
-Build & test
+Build und test
 ------------
 Build Android Studio<br>
 - de.robv.android.xposed:api:82 (https://github.com/rovo89/XposedBridge)
