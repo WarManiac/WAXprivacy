@@ -38,14 +38,14 @@ public class Module implements IXposedHookLoadPackage {
 
     public void logout(String info, String output)
     {
-        XposedBridge.log(APP_PACKET_NAME + " >  " +info+  " :   "+ output);
+        //XposedBridge.log(APP_PACKET_NAME + " >  " +info+  " :   "+ output);
     }
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         if (APP.equals(lpparam.packageName)) {
             int i_sdk = Build.VERSION.SDK_INT;
-            logout("LOAD", String.valueOf(i_sdk));
+            //logout("LOAD", String.valueOf(i_sdk));
 
 
             final Class<?> cResolver = findClass("android.content.ContentResolver", lpparam.classLoader);
@@ -56,7 +56,7 @@ public class Module implements IXposedHookLoadPackage {
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     final Uri uri = (Uri) param.args[0];
                     //if (uri.toString().equals("content://com.android.contacts/raw_contacts"))
-                    logout("beforeHookedMethod",uri.toString());
+                    //logout("beforeHookedMethod",uri.toString());
 
                     Context ctx = (Context) XposedHelpers.getObjectField(param.thisObject, M_CONTEXT);
                     IntentFilter filter = new IntentFilter();
@@ -71,12 +71,14 @@ public class Module implements IXposedHookLoadPackage {
                                 H_ROWS  = intent.getIntegerArrayListExtra(SettingsActivity.PACKAGE_H_ROWS);
                                 H_PHONE = intent.getStringArrayListExtra(SettingsActivity.PACKAGE_H_PHONE);
                                 H_DATA1 = intent.getStringArrayListExtra(SettingsActivity.PACKAGE_H_DATA1);
+                                /*
                                 for (int i=0; i<H_ROWS.size(); i++)
                                     XposedBridge.log("replay:"+H_ROWS.get(i));
                                 for (int i=0; i<H_PHONE.size(); i++)
                                     XposedBridge.log("replay:"+H_PHONE.get(i));
                                 for (int i=0; i<H_DATA1.size(); i++)
                                     XposedBridge.log("replay:"+H_DATA1.get(i));
+                                */
                             }
                         }
                     }, filter);

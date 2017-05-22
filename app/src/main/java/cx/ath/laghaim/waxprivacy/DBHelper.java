@@ -3,6 +3,7 @@ package cx.ath.laghaim.waxprivacy;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -110,7 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
         res.moveToFirst();
 
         if (res.getCount()==0) {
-            Log.w("Xposed insert",H_ROWS+" "+ H_DATA1 + " " + H_PHONE);
+            //Log.w("Xposed insert",H_ROWS+" "+ H_DATA1 + " " + H_PHONE);
             ContentValues contentValues = new ContentValues();
             contentValues.put("H_ROWS"   , H_ROWS);
             contentValues.put("H_DATA1"   , H_DATA1);
@@ -118,7 +119,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put("STATUS"   , 0 );
             db.insert(CONTACTS_TABLE_NAME, null, contentValues);
         } else {
-            Log.w("Xposed update",res.getString(res.getColumnIndex("rowid"))+" "+H_ROWS+" "+ H_DATA1 + " " + H_PHONE);
+            //Log.w("Xposed update",res.getString(res.getColumnIndex("rowid"))+" "+H_ROWS+" "+ H_DATA1 + " " + H_PHONE);
             ContentValues contentValues = new ContentValues();
             contentValues.put("H_ROWS", H_ROWS);
             contentValues.put("H_DATA1", H_DATA1);
@@ -240,29 +241,25 @@ public class DBHelper extends SQLiteOpenHelper {
 
         for (int i=0; i<re.size(); i++) {
             if (re.get(i).get(4).toString().equals("1")) {
-                Log.w("Xposed DB",re.get(i).get(1).toString());
-                Log.w("Xposed DB",re.get(i).get(2).toString());
-                Log.w("Xposed DB",re.get(i).get(3).toString());
+                //Log.w("Xposed DB",re.get(i).get(1).toString());
+                //Log.w("Xposed DB",re.get(i).get(2).toString());
+                //Log.w("Xposed DB",re.get(i).get(3).toString());
 
                 String H_ROWS=re.get(i).get(1).toString();
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("H_ROWS"   , H_ROWS);
 
-                //try {
-                long t= db.insert("H_ROWS", null, contentValues);
-                Log.w("Xposed DB", ""+t);
-                //} catch (SQLiteConstraintException e) {
-                //    Log.w("Xposed DB"," error",e);
-                //}
+                try {
+                db.insertOrThrow("H_ROWS", null, contentValues);
 
                 contentValues = new ContentValues();
                 contentValues.put("H_DATA1"   , re.get(i).get(2).toString());
-                db.insert("H_DATA1", null, contentValues);
+                db.insertOrThrow("H_DATA1", null, contentValues);
 
                 contentValues = new ContentValues();
                 contentValues.put("H_PHONE"   , re.get(i).get(3).toString());
-                db.insert("H_PHONE", null, contentValues);
-
+                db.insertOrThrow("H_PHONE", null, contentValues);
+                } catch (SQLiteConstraintException e) {}
 
             } else {
 
