@@ -210,8 +210,8 @@ public class Module implements IXposedHookLoadPackage {
                     if (anderung) {
                         result.respond(cursor.getExtras());
                         param.setResult(result);
-                        cursor.close();
                     }
+                    cursor.close();
                 }
 
                 private  void copyColumns_c(Cursor cursor, MatrixCursor result, String colum, String arg) {

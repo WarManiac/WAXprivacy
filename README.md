@@ -21,6 +21,7 @@ Whatsapp fragt immer das Adressebuch ab.<br>
 2. dann einzelen über raw_contacts
 3. vom Kontackt die einzelen eigeben Datensätze
 genau ihr setzt WAXprivacy an, gibt oder verhinder Kontaktedaen weiter zu Whatsapp App<br>
+Standart alle Nummer werden nicht weiter gegebn
 
 GUI WAXprivacy Xposed Module
 ----
