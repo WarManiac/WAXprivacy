@@ -8,12 +8,12 @@ android {
         minSdkVersion 22
         targetSdkVersion 25
         versionCode 0
-        versionName "0.0.02"
+        versionName "0.0.03"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     productFlavors {
         full {
-            versionName "0.0.02-pre-Alpha"
+            versionName "0.0.03-pre-Alpha"
         }
     }
 
@@ -34,10 +34,11 @@ dependencies {
      * diese wird gebraucht für XposedBridge
     */
     //provided 'de.robv.android.xposed:api:82:sources'
+    provided 'de.robv.android.xposed:api:82'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
-    provided 'de.robv.android.xposed:api:82'
+
 }

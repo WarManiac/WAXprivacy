@@ -132,20 +132,20 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<ArrayList <String> > getAllCotacts() {
 
         ArrayList<ArrayList <String> > re =new ArrayList<>();
-        ArrayList<String> array_list =new ArrayList<>();
+        ArrayList<String> array_list;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select rowid,* from "+CONTACTS_TABLE_NAME + " ORDER BY H_DATA1 ASC;", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
             array_list =new ArrayList<>();
-            array_list.add(res.getString(res.getColumnIndex("rowid"    )));
-            array_list.add(res.getString(res.getColumnIndex("H_ROWS"   )));
+            array_list.add(res.getString(res.getColumnIndex("rowid"  )));
+            array_list.add(res.getString(res.getColumnIndex("H_ROWS" )));
             array_list.add(res.getString(res.getColumnIndex("H_DATA1")));
-            array_list.add(res.getString(res.getColumnIndex("H_PHONE"  )));
+            array_list.add(res.getString(res.getColumnIndex("H_PHONE")));
             array_list.add(res.getString(res.getColumnIndex("STATUS" )));
-            res.moveToNext();
             re.add(array_list);
+            res.moveToNext();
         }
         return re;
     }

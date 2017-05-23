@@ -104,6 +104,7 @@ public class Module implements IXposedHookLoadPackage {
                     Uri uri;
                     MatrixCursor result;
                     boolean anderung=false;
+
                     try // Probleme mit KNOX und Samsunggeräte vorbeugen
                     {
                         cNames = ((Cursor) param.getResult()).getColumnNames();
@@ -147,7 +148,7 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/raw_contacts"))
                         {
-                            XposedBridge.log("cursor: \n"+debug);
+                            XposedBridge.log("cursor raw_contacts\n"+debug);
                             if (cursor.getColumnIndex("_id")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("_id"));
                                 if (H_ROWS.indexOf(Integer.parseInt(ID) ) > -1 ) {
@@ -159,7 +160,7 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/data/phones"))
                         {
-                            XposedBridge.log("cursor: \n"+debug);
+                            XposedBridge.log("cursor phones \n"+debug);
                             if (cursor.getColumnIndex("raw_contact_id")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("raw_contact_id"));
                                 PHONE=cursor.getString(cursor.getColumnIndex("data1"));
@@ -172,7 +173,7 @@ public class Module implements IXposedHookLoadPackage {
 
                         if (uri.toString().equals("content://com.android.contacts/data"))
                         {
-                            XposedBridge.log("cursor: \n"+debug);
+                            XposedBridge.log("cursor data\n"+debug);
                             if (cursor.getColumnIndex("data1")>-1) {
                                 ID = cursor.getString(cursor.getColumnIndex("data1"));
                                 if (H_DATA1.indexOf(ID) > -1) {
