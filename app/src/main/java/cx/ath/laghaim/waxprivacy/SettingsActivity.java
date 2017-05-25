@@ -6,11 +6,14 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ExpandableListAdapter;
@@ -34,15 +37,19 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     public static final String APP_PACKET_NAME   = SettingsActivity.class.getPackage().getName();
 
     public static final String ACTION_SEND_CALL   = APP_PACKET_NAME+".send_call";
-    public static final String ACTION_SEND_REPLAY = APP_PACKET_NAME+".send_replay";
+    public static final String ACTION_SEND_REPLAY   = APP_PACKET_NAME+".send_replay";
+    public static final String ACTION_SEND_REPLAY_1 = APP_PACKET_NAME+".send_replay_1";
     public static final String ACTION_SEND_PACKS = APP_PACKET_NAME+".send_replay";
+
 
     public static final String PACKAGE_ID     = "ID";
     public static final String PACKAGE        = "package";
 
+    public static final String PACKAGE_H_ROWID = "H_ROWS";
     public static final String PACKAGE_H_ROWS  = "H_ROWS";
     public static final String PACKAGE_H_PHONE ="H_PHONE";
     public static final String PACKAGE_H_DATA1 ="H_DATA1";
+    public static final String PACKAGE_H_STATUS="H_STATUS";
 
 
     private Intent intent;
@@ -51,12 +58,11 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
 
     public static SettingsActivity _SettingsActivity;
 
-    ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<ArrayList<String>>> listDataChild;
     private HashMap<Integer, Integer> PVID=new HashMap<>();
     private HashMap<Integer, ArrayList<Integer>> NVID=new HashMap<>() ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +80,13 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
             @Override
             public void run() {
                 getContacts();
+                Intent i = new Intent(SettingsActivity.ACTION_SEND_CALL);
+                i.setPackage(APP_PACKET_NAME);
+                i.putExtra(SettingsActivity.PACKAGE_ID, "all");
+                _SettingsActivity.startService(i);
             }
         }).start();
 
-        // get the listview
-
-
-        // preparing list data
     }
 
     public void getContacts() {
@@ -96,11 +102,13 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
         Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
 
         DBHelper DB = new DBHelper(this);
-
+        ArrayList<Integer> RAW_CONTACT_IDs=new ArrayList<>();
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Integer contact_id     = cursor.getInt(cursor.getColumnIndex(_ID));
                 Integer RAW_CONTACT_ID = cursor.getInt(cursor.getColumnIndex(RID));
+                RAW_CONTACT_IDs.add(RAW_CONTACT_ID);
+
                 String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
                 int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
                 if (hasPhoneNumber > 0) {
@@ -114,7 +122,9 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
                 }
             }
         }
+        DB.dell_old(RAW_CONTACT_IDs);
         DB.close();
+
         Intent signalIntent = new Intent(cx.ath.laghaim.waxprivacy.BroadcastService.BROADCAST_ACTION);
         sendBroadcast(signalIntent);
     }
@@ -159,6 +169,7 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
         cx.ath.laghaim.waxprivacy.DBHelper DB=new cx.ath.laghaim.waxprivacy.DBHelper(this);
         ArrayList<ArrayList<String>> re=DB.getAllCotacts();
         DB.close();
+
 
         HashMap< Integer,HashMap >  re_map=new HashMap();
         for(int i=0; i<re.size();i++) {
@@ -217,25 +228,30 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
         {
             TextView Name=new TextView(this);
             Name.setText(NAMEN);
-            Name.setTextSize(18);
+            Name.setTextSize(24);
             int vv=findUnusedId();
             Name.setId(vv);
-            Name.setPadding(8,0,0,0);
+            Name.setPadding(32,10,0,10);
+            Name.setTypeface(null, Typeface.BOLD);
             LinearLayout LPHONE=new LinearLayout(this);
-
             LPHONE.setOrientation(LinearLayout.VERTICAL);
-            LPHONE.setPadding(16,0,0,0);
-
             List<ArrayList<String>> TTT=listDataChild.get(NAMEN);
             ArrayList<Integer> nn=new ArrayList<>();
             for (int i=0; i<TTT.size(); i++) {
                 Switch PHONE=new Switch(this);
+                PHONE.setPadding(64,10,64,10);
+                PHONE.setTextSize(18);
                 PHONE.setText(TTT.get(i).get(0));
                 PHONE.setVisibility(View.GONE);
                 if (TTT.get(i).get(1).equals("1"))
                     PHONE.setChecked(true);
                 else
                     PHONE.setChecked(false);
+
+                if (PHONE.isChecked())
+                    PHONE.setTextColor(Color.GREEN);
+                else
+                    PHONE.setTextColor(Color.RED);
 
                 int v=findUnusedId();
                 PHONE.setId(v);
@@ -265,6 +281,11 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
             DB.updateContact (ROWID, 0 );
 
         DB.close();
+
+        if (buttonView.isChecked())
+            buttonView.setTextColor(Color.GREEN);
+        else
+            buttonView.setTextColor(Color.RED);
 
         Intent i = new Intent(SettingsActivity.ACTION_SEND_CALL);
         i.setPackage(APP_PACKET_NAME);
