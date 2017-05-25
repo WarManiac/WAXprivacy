@@ -93,15 +93,6 @@ public class Module implements IXposedHookLoadPackage {
                         ctx.registerReceiver(new BroadcastReceiver() {
                             @Override
                             public void onReceive(Context context, Intent intent) {
-                                if (intent.getAction().equals(SettingsActivity.ACTION_SEND_REPLAY_1)) {
-
-                                    H_ROWID= intent.getIntegerArrayListExtra(SettingsActivity.PACKAGE_H_ROWID);
-                                    H_ROWS = intent.getIntegerArrayListExtra(SettingsActivity.PACKAGE_H_ROWS);
-                                    H_PHONE = intent.getStringArrayListExtra(SettingsActivity.PACKAGE_H_PHONE);
-                                    H_DATA1 = intent.getStringArrayListExtra(SettingsActivity.PACKAGE_H_DATA1);
-                                    H_STATUS=intent.getIntegerArrayListExtra(SettingsActivity.PACKAGE_H_STATUS);
-                                    //param.args[0]="content://com.android.contacts/raw_contacts";
-                                }
 
                                 if (intent.getAction().equals(SettingsActivity.ACTION_SEND_REPLAY) || intent.getAction().equals(SettingsActivity.ACTION_SEND_REPLAY_1) ) {
 
@@ -117,12 +108,13 @@ public class Module implements IXposedHookLoadPackage {
                             }
                         }, filter);
                         cx=true;
-                        if (abfrage) {
-                            Intent i = new Intent(SettingsActivity.ACTION_SEND_CALL);
-                            i.setPackage(APP_PACKET_NAME);
-                            i.putExtra(SettingsActivity.PACKAGE_ID, "all");
-                            ctx.startService(i);
-                        }
+
+                    }
+                    if (abfrage && cx) {
+                        Intent i = new Intent(SettingsActivity.ACTION_SEND_CALL);
+                        i.setPackage(APP_PACKET_NAME);
+                        i.putExtra(SettingsActivity.PACKAGE_ID, "all");
+                        ctx.startService(i);
                     }
                 }
 
