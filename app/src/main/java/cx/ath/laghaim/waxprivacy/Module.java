@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -102,8 +103,8 @@ public class Module implements IXposedHookLoadPackage {
                                     H_DATA1 = intent.getStringArrayListExtra(SettingsActivity.PACKAGE_H_DATA1);
                                     H_STATUS=intent.getIntegerArrayListExtra(SettingsActivity.PACKAGE_H_STATUS);
                                     abfrage = false;
-                                    for (int i=0; i<H_ROWS.size(); i++)
-                                        XposedBridge.log ("onReceive "+H_ROWS.get(i)+" "+H_DATA1.get(i)+" "+H_STATUS.get(i));
+                                    //for (int i=0; i<H_ROWS.size(); i++)
+                                    //    XposedBridge.log ("onReceive "+H_ROWS.get(i)+" "+H_DATA1.get(i)+" "+H_STATUS.get(i));
                                 }
                             }
                         }, filter);
@@ -128,9 +129,6 @@ public class Module implements IXposedHookLoadPackage {
                     boolean anderung=false;
                     uri    = (Uri) param.args[0];
 
-                    if (    uri.toString().equals("content://com.android.contacts/raw_contacts")||
-                            uri.toString().equals("content://com.android.contacts/data/phones")||
-                            uri.toString().equals("content://com.android.contacts/data") ) {
                         try // Probleme mit KNOX und Samsunggeräte vorbeugen
                         {
                             cNames = ((Cursor) param.getResult()).getColumnNames();
@@ -142,7 +140,7 @@ public class Module implements IXposedHookLoadPackage {
                         }
 
 
-                        //logout("afterHookedMethod",uri.toString());
+                        logout("afterHookedMethod",uri.toString());
 
                         while (cursor.moveToNext()) {
                             String ID="";
@@ -152,11 +150,7 @@ public class Module implements IXposedHookLoadPackage {
                             String debug="";
 
                             int cNames_l_max=0;
-                            if (    uri.toString().equals("content://com.android.contacts/raw_contacts")||
-                                    uri.toString().equals("content://com.android.contacts/data/phones")||
-                                    uri.toString().equals("content://com.android.contacts/data")
-                                    )
-                            {
+
                                 if (cursor.getCount() > 0) {
                                     for (int i = 0; i < cNames.length; i++) {
                                         if (cNames_l_max<cNames[i].length())
@@ -166,10 +160,15 @@ public class Module implements IXposedHookLoadPackage {
 
                                         String tmp="[" + cNames[i] + "]";
 
-                                        debug=debug+ String.format("%"+(cNames_l_max+2)+"s", tmp)     +"\t=\t" + cursor.getString(i)+"\n";
+                                        try {
+                                            debug = debug + String.format("%" + (cNames_l_max + 2) + "s", tmp) + "\t=\t" + cursor.getString(i) + "\n";
+                                        } catch (SQLiteException e )
+                                        {
+
+                                        }
                                     }
                                 }
-                            }
+
 
                             if (uri.toString().equals("content://com.android.contacts/raw_contacts"))
                             {
@@ -182,8 +181,8 @@ public class Module implements IXposedHookLoadPackage {
                                         if (H_ROWS.get(i) == Integer.parseInt(ID) && H_STATUS.get(i)==1 ) {
                                             copyColumns(cursor, result);
                                             anderung = true;
-                                            //XposedBridge.log ("raw_contacts Found permission "+H_ROWS.get(i)+" "+H_DATA1.get(i)+" "+H_STATUS.get(i));
-                                            i=suche.size()+1;
+                                            XposedBridge.log ("raw_contacts copy "+H_ROWS.get(i)+" "+H_DATA1.get(i)+" "+H_STATUS.get(i));
+                                            i=H_ROWS.size()+1;
                                         }
                                     }
                                 }
@@ -278,7 +277,7 @@ public class Module implements IXposedHookLoadPackage {
 
                             if (uri.toString().equals("content://com.android.contacts/data"))
                             {
-
+                                logout("data",debug);
                                 if (cursor.getColumnIndex("data1")>-1) {
                                     String data1 = cursor.getString(cursor.getColumnIndex("data1"));
                                     ID = cursor.getString(cursor.getColumnIndex("raw_contact_id"));
@@ -294,9 +293,6 @@ public class Module implements IXposedHookLoadPackage {
                                         if (H_STATUS.get(suche.get(i))==1 && H_DATA1.get(suche.get(i)).equals(data1)){
                                             //XposedBridge.log ("data Found permission "+H_ROWS.get(i)+" "+H_DATA1.get(i)+" "+H_STATUS.get(i));
                                             copyColumns(cursor, result);
-
-
-
                                             anderung=true;
                                             i=suche.size()+1;
                                         }
@@ -307,9 +303,28 @@ public class Module implements IXposedHookLoadPackage {
                             if (uri.toString().equals("content://com.android.contacts/raw_contacts?account_name=WhatsApp&account_type=com.whatsapp&caller_is_syncadapter=true"))
                             {
                                 XposedBridge.log("uri "+uri.toString());
-                                logout("phones",debug);
+                                logout("caller_is_syncadapter",debug);
                                 copyColumns(cursor, result);
                                 anderung=true;
+
+                                if (cursor.getColumnIndex("data1")>-1) {
+                                    ID = cursor.getString(cursor.getColumnIndex("_id"));
+                                    ArrayList<Integer> suche = new ArrayList<>();
+                                    for (int i = 0; i < H_ROWS.size(); i++) {
+                                        if (H_ROWS.get(i) == Integer.parseInt(ID) && H_STATUS.get(i)==1) {
+                                            suche.add(i);
+                                        }
+                                    }
+                                if (suche.size()==0)
+                                {
+                                    copyColumns_c(cursor, result, "deleted","1");
+                                    anderung=true;
+                                } else
+                                {
+                                    copyColumns(cursor, result);
+                                    anderung=true;
+                                }
+                                }
                                 /*
 
                                 if (cursor.getColumnIndex("_id")>-1) {
@@ -333,12 +348,12 @@ public class Module implements IXposedHookLoadPackage {
                                 anderung=true;
                             }
                         }
-                    }
                     if (anderung) {
                         result.respond(cursor.getExtras());
                         param.setResult(result);
                         cursor.close();
                     }
+
                 }
 
                 private  void copyColumns_c(Cursor cursor, MatrixCursor result, String colum, String arg) {

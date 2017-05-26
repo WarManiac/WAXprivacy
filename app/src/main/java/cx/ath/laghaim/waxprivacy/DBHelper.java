@@ -180,7 +180,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return re;
     }
 
-    public void dell_old(ArrayList<Integer> arg)
+    public void dell_old(ArrayList<String> arg,int arg2)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -189,9 +189,14 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<String> whereArgs =new ArrayList<>();
         for (Integer i=0; i<arg.size();i++)
         {
-            whereClause=whereClause+"H_ROWS = ?";
+            if (arg2==1)
+                whereClause=whereClause+"H_ROWS != ?";
+            if (arg2==2)
+                whereClause=whereClause+"H_PHONE != ?";
             if (i<arg.size()-1)  whereClause=whereClause+" and ";
-            whereArgs.add(String.valueOf(arg.get(i)));
+            {
+                whereArgs.add(arg.get(i));
+            }
         }
         String[] WhereArgs = new String[whereArgs.size()];
         WhereArgs = whereArgs.toArray(WhereArgs);

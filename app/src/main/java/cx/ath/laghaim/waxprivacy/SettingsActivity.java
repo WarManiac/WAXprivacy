@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.widget.ThemedSpinnerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ExpandableListAdapter;
@@ -102,28 +103,34 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
         Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
 
         DBHelper DB = new DBHelper(this);
-        ArrayList<Integer> RAW_CONTACT_IDs=new ArrayList<>();
+        ArrayList<String> RAW_CONTACT_IDs=new ArrayList<>();
+        ArrayList<String> pphone=new ArrayList<>();
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Integer contact_id     = cursor.getInt(cursor.getColumnIndex(_ID));
                 Integer RAW_CONTACT_ID = cursor.getInt(cursor.getColumnIndex(RID));
-                RAW_CONTACT_IDs.add(RAW_CONTACT_ID);
+                RAW_CONTACT_IDs.add(String.valueOf(RAW_CONTACT_ID));
 
                 String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
                 int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(HAS_PHONE_NUMBER)));
+
                 if (hasPhoneNumber > 0) {
                     //This is to read multiple phone numbers associated with the same contact
                     Cursor phoneCursor = contentResolver.query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[]{String.valueOf(contact_id)}, null);
 
                     while (phoneCursor.moveToNext()) {
                         String pNumber = phoneCursor.getString(phoneCursor.getColumnIndex(NUMBER));
+                        pphone.add(pNumber);
                         DB.todb(RAW_CONTACT_ID, name, pNumber);
+                        Log.w("Xosed",""+contact_id+" "+RAW_CONTACT_ID+" "+name+" "+pNumber);
                     }
                 }
             }
         }
-        DB.dell_old(RAW_CONTACT_IDs);
+        DB.dell_old(RAW_CONTACT_IDs,1);
+        DB.dell_old(pphone,2);
         DB.close();
+
 
         Intent signalIntent = new Intent(cx.ath.laghaim.waxprivacy.BroadcastService.BROADCAST_ACTION);
         sendBroadcast(signalIntent);
